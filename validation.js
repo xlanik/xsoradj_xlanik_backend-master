@@ -1,0 +1,1 @@
+//validacia cisel, povinnych poli a zistovanie errorov
