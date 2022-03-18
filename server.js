@@ -13,10 +13,10 @@ MongoClient.connect(databaseUri, (err, client) => {
   if (err) return console.error(err)
   console.log('Connected to Database')
   const db = client.db('Autoservis')
-  const customers = db.collection('customers')
+  const customers = db.collection('Customers')
 
 
-  app.post('/customers', (req, res) => {
+  app.post('/Customers', (req, res) => {
     
       //todo validacia vstupnych dat
 
@@ -27,7 +27,7 @@ MongoClient.connect(databaseUri, (err, client) => {
 
   
 
-  app.get('/customers', (req, res) => {
+  app.get('/Customers', (req, res) => {
     
     //todo validacia vstupnych dat
 
@@ -44,7 +44,7 @@ MongoClient.connect(databaseUri, (err, client) => {
 
 
 app.get('/', function(req, res) {
-  res.send('Hello World!')
+  res.send('Hello kubeno!')
 });
 
 
