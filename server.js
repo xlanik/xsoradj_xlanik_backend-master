@@ -44,11 +44,7 @@ MongoClient.connect(databaseUri, (err, client) => {
 
 
 app.get('/', function(req, res) {
-<<<<<<< HEAD
   res.send('Hello asasdasdasdasdasdasdasd!')
-=======
-  res.send('Hello kubeno!')
->>>>>>> 739fb1072b21ef0ec56134fa880fe5ce3e7ede1d
 });
 
 
