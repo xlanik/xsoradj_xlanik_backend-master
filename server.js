@@ -44,7 +44,7 @@ MongoClient.connect(databaseUri, (err, client) => {
 
 
 app.get('/', function(req, res) {
-  res.send('Hello matko!')
+  res.send('Hello jakubko!')
 });
 
 
