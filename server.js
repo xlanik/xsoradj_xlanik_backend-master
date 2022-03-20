@@ -9,6 +9,7 @@ const databaseUri = process.env.DATABASE_URI
 
 app.use(express.json()) //https://stackoverflow.com/questions/18542329/typeerror-cannot-read-property-id-of-undefined
 
+//v envcku v tom database uri si treb premenit nazov databazy z MyfirstDatabase na Autoservis
 
 const Technician = require('./databaseModels/Technicians')
 const Customer = require('./databaseModels/Customer')
