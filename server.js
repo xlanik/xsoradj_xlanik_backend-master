@@ -132,28 +132,20 @@ app.route('/Cars/:id')
   })
   .delete(getOneCar, async (req, res) => {
     try {
-      await res.customer.remove()
+      await res.car.remove()
       res.json({ message: 'Car was deleted from DB...' })
     } catch (err) {
       res.status(500).json({ message: err.message })
     }
   })
   .patch(getOneCar, async (req, res) => {
-    if (req.body.oilChange != null) {
-      res.car.oilChange = req.body.oilChange
-    }
-    if (req.body.filterChange != null) {
-      res.car.filterChange = req.body.filterChange
-    }
-    if (req.body.tireChange != null) {
-      res.car.tireChange = req.body.tireChange
-    }
-    if (req.body.engineService != null) {
-      res.car.engineService = req.body.engineService
-    }
-    if (req.body.state != null) {
-      res.car.state = req.body.state
-    }
+    res.car.oilChange = false
+    res.car.filterChange = false
+    res.car.tireChange = false
+    res.car.engineService = false
+    res.car.state = "repaired"
+    res.car.last_service = new Date()
+
     if (req.body.description != null) {
       res.car.description = req.body.description
     }
