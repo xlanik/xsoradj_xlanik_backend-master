@@ -71,8 +71,20 @@ app.route('/Customers')
       password: req.body.password
     })
     try {
-      const newCustomer = await customer.save()
-      res.status(201).json(newCustomer)
+
+      const usedName = await Customer.findOne({ name: req.body.name })
+      const usedPhoneNumber = await Customer.findOne({ phoneNumber: req.body.phoneNumber })
+      const usedEmail = await Customer.findOne({ email: req.body.email })
+
+      if(usedName)  res.status(400).json({ message: "Uzivatel s tymto menom uz je zaregistrovany" })
+      else if(usedPhoneNumber)  res.status(400).json({ message: "Uzivatel s tymto telefonnym cislom uz je zaregistrovany" })
+      else if(usedEmail)  res.status(400).json({ message: "Uzivatel s tymto emailom uz je zaregistrovany" })
+
+      if(!usedName && !usedPhoneNumber && !usedEmail){
+        const newCustomer = await customer.save()
+        res.status(201).json(newCustomer)
+      }
+
     } catch (err) {
       res.status(400).json({ message: err.message })
     }
