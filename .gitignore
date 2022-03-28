@@ -2421,3 +2421,14 @@ node_modules/yallist/yallist.js
 .env
 =======
 >>>>>>> 739fb1072b21ef0ec56134fa880fe5ce3e7ede1d
+my-app/.gitignore
+my-app/App.js
+my-app/app.json
+my-app/babel.config.js
+my-app/package-lock.json
+my-app/package.json
+my-app/.expo-shared/assets.json
+my-app/assets/adaptive-icon.png
+my-app/assets/favicon.png
+my-app/assets/icon.png
+my-app/assets/splash.png

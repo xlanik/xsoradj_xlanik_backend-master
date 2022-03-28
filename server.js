@@ -49,9 +49,34 @@ app.route('/Technicians')
     res.json(res.technician)
   })
 
-
-
-
+app.route('/login')
+  .post(async (req, res) => {
+    try{
+      const loginCustomer = await Customer.findOne({ name: req.body.name })
+      if(loginCustomer){
+        if(loginCustomer.password == req.body.password){
+          res.status(400).json({ loginCustomer })
+        }
+        else{
+          res.status(400).json({ message: "Zle prihlasovacie udaje" })
+        }
+      }
+      else{
+        const loginTechnician = await Technician.findOne({ name: req.body.name })
+        if(loginTechnician){
+          if(loginTechnician.password == req.body.password){
+            res.status(400).json({loginTechnician })
+          }
+        else{
+          res.status(400).json({ message: "Zle prihlasovacie udaje" })
+        }
+        }
+      }
+    }
+    catch(err){
+      res.status(400).json({ message: err.message })
+    }
+  })
 
 //API volania zakaznikov
 app.route('/Customers')
