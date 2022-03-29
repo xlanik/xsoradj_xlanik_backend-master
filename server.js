@@ -4,10 +4,14 @@ const port = 3000;
 const MongoClient = require('mongodb').MongoClient
 require('dotenv').config()
 const mongoose = require('mongoose');
+const multer  = require('multer')
+const upload = multer({ dest: 'uploads/' })
+const fs = require('fs');
 
 const databaseUri = process.env.DATABASE_URI
 
-app.use(express.json()) //https://stackoverflow.com/questions/18542329/typeerror-cannot-read-property-id-of-undefined
+//app.use(express.json()) //https://stackoverflow.com/questions/18542329/typeerror-cannot-read-property-id-of-undefined
+app.use(express.json({limit: '50mb'}));
 
 //v envcku v tom database uri si treb premenit nazov databazy z MyfirstDatabase na Autoservis
 
@@ -129,6 +133,11 @@ app.route('/Customers/:id')
   })
 
 
+function base64_encode(file) {
+  var bitmap = fs.readFileSync(file);
+  return new Buffer(bitmap).toString('base64');
+}
+
 //API volania pre auta v servise
 app.route('/Cars')
   .get(async (req, res) => {
@@ -139,21 +148,26 @@ app.route('/Cars')
       res.status(500).json({ message: err.message })
     }
   })
-  .post(async (req, res) => {
+  .post(upload.single('image_url'), async (req, res) => {
+    
+    const parsedData = JSON.parse(req.body.data)
+    console.log(req.file)
+    const encoded = base64_encode(req.file.path)
+
     const car = new Car({
-      customer_id: req.body.customer_id,
-      technician_id: req.body.technician_id,
-      brand: req.body.brand,
-      model: req.body.model,
-      year: req.body.year,
-      oilChange: req.body.oilChange,
-      filterChange: req.body.filterChange,
-      tireChange: req.body.tireChange,
-      engineService: req.body.engineService,
-      state: req.body.state,
-      description: req.body.description,
-      image_url: req.body.image_url,
-      number_plate: req.body.number_plate
+      customer_id: parsedData.customer_id,
+      technician_id: parsedData.technician_id,
+      brand: parsedData.brand,
+      model: parsedData.model,
+      year: parsedData.year,
+      oilChange: parsedData.oilChange,
+      filterChange: parsedData.filterChange,
+      tireChange: parsedData.tireChange,
+      engineService: parsedData.engineService,
+      state: parsedData.state,
+      description: parsedData.description,
+      image_url: encoded,
+      number_plate: parsedData.number_plate
     })
     try {
       const newCar = await car.save()
@@ -170,7 +184,7 @@ app.route('/Cars/:id')
   .delete(getOneCar, async (req, res) => {
     try {
       await res.car.remove()
-      res.json({ message: 'Car was deleted from DB...' })
+      res.status(200).json({ message: 'Car was deleted from DB...' })
     } catch (err) {
       res.status(500).json({ message: err.message })
     }
@@ -220,7 +234,7 @@ app.route('/RepairedCars')
       engineService: req.body.engineService,
       state: req.body.state,
       description: req.body.description,
-      image_url: req.body.image_url,
+      image_url: req.file.image_url,
       number_plate: req.body.number_plate,
       last_service: req.body.last_service
     })
