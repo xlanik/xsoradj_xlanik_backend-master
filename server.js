@@ -242,7 +242,7 @@ app.route('/RepairedCars')
       engineService: req.body.engineService,
       state: req.body.state,
       description: req.body.description,
-      image_url: req.file.image_url,
+      image_url: req.body.image_url,
       number_plate: req.body.number_plate,
       last_service: req.body.last_service
     })

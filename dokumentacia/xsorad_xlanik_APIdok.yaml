@@ -4,36 +4,32 @@ info:
   description: API dokumentácia k projektu. API dokumentacia vychádza zo šturktúry https://swagger.io/docs/specification/basic-structure/
   version: 1.0.0
 paths:
-  /api/v1/login:
+  /login:
     post:
       description: Volanie login je volané vždy pri prihlasovaní používateľa do aplikácie. Prehľadáva sa aj databáza s používateľmi a taktiež s technikmi
       tags:
         - Prihlásenie používateľa
       summary: Skontroluje zadané používateľské údaje
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomersLogin'
       responses:
-        '202':
+        '200':
           description: Detail prihláseného používateľa
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  items:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Customers'
-        '403':
+                  $ref: '#/components/schemas/Customers'
+        '400':
           description: Zlé prihlasovacie údaje
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  items:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/BadDetails'
-  /api/v1/customers:
+                $ref: '#/components/schemas/BadDetails'
+  /customers:
     get:
       description: Bude volaný vtedy, keď budeme potrebovať získať zoznam používateľov kvôli prihláseniu.
       tags:
@@ -47,7 +43,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  items:
+                  array:
                     type: array
                     items:
                       $ref: '#/components/schemas/Customers'
@@ -56,21 +52,22 @@ paths:
       tags:
         - Vkladanie používateľa do DB
       summary: Vytvorí nový záznam používateľa v databáze
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customers'
       responses:
         '201':
           description: Detail vytvoreného používateľa
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  items:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Customers201'
-        '422':
+                $ref: '#/components/schemas/Customers201'
+        '400':
           description: Detaily validačnej chyby
-  /api/v1/customers/{id}:
+  /customers/{id}:
     get:
       description: Toto volanie bude používané, keď budeme zisťovať informácie o používateľovi po jeho prihlásení do aplikácie.
       tags:
@@ -89,24 +86,14 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  items:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/CustomersID200'
-        '404':
+                $ref: '#/components/schemas/CustomersID200'
+        '400':
           description: Používateľ neexistuje
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  items:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/CustomersID404'
-  /api/v1/cars:
+                $ref: '#/components/schemas/CustomersID404'
+  /cars:
     get:
       description: Toto volanie sa vykoná vtedy, keď budeme potrebovať získať všetky opravované vozidla pre technika, aby ich mohol prezerať v aplikácii. 
       tags:
@@ -120,7 +107,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  items:
+                  array:
                     type: array
                     items:
                       $ref: '#/components/schemas/Cars'
@@ -129,30 +116,26 @@ paths:
       tags:
         - Vloženie auta do DB
       summary: Vytvorí nový záznam používateľa v databáze
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CarsPost'
       responses:
         '201':
           description: Detail vytvoreného vozidla
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  items:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Cars201'
-        '422':
+                $ref: '#/components/schemas/Cars201'
+        '400':
           description: Detaily validačnej chyby
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  items:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Cars422'
-  /api/v1/repairedCars:
+                $ref: '#/components/schemas/Cars422'
+  /repairedCars:
     get:
       description: Toto volanie sa vykonáva vždy, keď si bude technik prezerať všetky vozidlá, ktoré sa už v minulosti servisovali v autoservise.
       tags:
@@ -166,7 +149,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  items:
+                  array:
                     type: array
                     items:
                       $ref: '#/components/schemas/Cars'
@@ -175,30 +158,26 @@ paths:
       tags:
         - Vloženie auta do histórie DB
       summary: Vytvorí nový záznam používateľa v databáze
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CarsPost'
       responses:
         '201':
           description: Detail vytvoreného používateľa
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  items:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/RepairedCars201'
-        '422':
+                $ref: '#/components/schemas/RepairedCars201'
+        '400':
           description: Detaily validačnej chyby
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  items:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/RepairedCars422'
-  /api/v1/cars/{id}:
+                $ref: '#/components/schemas/RepairedCars422'
+  /cars/{id}:
     get:
       description: Toto volanie využívame na získanie informácií o aute, na ktorom sa práve vykonáva servis.
       tags:
@@ -217,23 +196,13 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  items:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Cars'
+                $ref: '#/components/schemas/Cars'
         '404':
           description: Vozidlo neexistuje
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  items:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/CarsID404'
+                $ref: '#/components/schemas/CarsID404'
     delete:
       description: Volanie DELETE používame keď si používateľ vyzdvihne svoje auto. Následne sa vždy vymazané vozidlo pridáva do databázy RepairedCars.
       tags:
@@ -252,23 +221,13 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  items:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/CarsDELETE200'
+                $ref: '#/components/schemas/CarsDELETE200'
         '404':
           description: Vozidlo so zadaným ID sa nenachádza v databáze
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  items:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/CarsID404'
+                $ref: '#/components/schemas/CarsID404'
     put:
       description: Používa sa na zmenu stavu opravy vozidla. 
       tags:
@@ -287,25 +246,67 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  items:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Cars'
+                $ref: '#/components/schemas/Cars'
                 
         '404':
           description: Vozidlo neexistuje
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  items:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/CarsID404'
-  /api/v1/technicians:
+                $ref: '#/components/schemas/CarsID404'
+  /TechnicianCars/{id}:
+    get:
+      description: Toto volanie využívame na získanie všetkých áut, na ktorých pracuje daný technik.
+      tags:
+        - Zobrazenie technikových vozidiel
+      summary: Vráti všetky vozidlá na ktorých pracuje konkrétny technik
+      parameters:
+        - name: id
+          required: true
+          in: path
+          description: unikátny identifikátor technika
+          schema:
+            type: number
+      responses:
+        '200':
+          description: Informácie o vozidlách
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cars'
+        '404':
+          description: Technik nemá pridelené žiadne vozidlá na servis.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Technicians404'
+  /CustomerCar/{id}:
+    get:
+      description: Toto volanie využívame na získanie auta, ktoré vlastní konkrétny zákazník.
+      tags:
+        - Zobrazenie informácií o zákazníkovom vozidle
+      summary: Vráti údaje o vozidle podľa prislúchajúceho zákazníka
+      parameters:
+        - name: id
+          required: true
+          in: path
+          description: unikátny identifikátor vozidla
+          schema:
+            type: number
+      responses:
+        '200':
+          description: Informácie o vozidle
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cars'
+        '404':
+          description: Zákazník nemá žiadne auto v servise.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomersID404'
+  /technicians:
     description: Toto volanie používame pri prihlasovaní technika, a taktiež pri získavaní všetkých technikov pri voľbe konkrétneho technika zákazníkom. 
     get:
       tags:
@@ -319,11 +320,11 @@ paths:
               schema:
                 type: object
                 properties:
-                  items:
+                  array:
                     type: array
                     items:
                       $ref: '#/components/schemas/Technicians'
-  /api/v1/technicians/{id}:
+  /technicians/{id}:
     description: Používame pri získavaní informácii o konkrétnom technikovi a ním opravovanými vozidlami.
     get:
       tags:
@@ -342,23 +343,13 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  items:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Technicians'
+                $ref: '#/components/schemas/Technicians'
         '404':
           description: Technik neexistuje
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  items:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Technicians404'
+                $ref: '#/components/schemas/Technicians404'
 components:
   schemas:
     Cars:
@@ -402,6 +393,49 @@ components:
         image_url:
           type: string
           example: obrazok.jpg
+        number_plate:
+          type: string
+          example: TT816DX
+    CarsPost:
+      properties:
+        image_url:
+          example: obrazok.jpg (sem nahrame mimo jsonu obrazok)
+        id:
+          type: number
+          example: 1
+        customer_id:
+          type: number
+          example: 1
+        technician_id:
+          type: number
+          example: 1
+        brand:
+          type: string
+          example: BMW
+        model:
+          type: string
+          example: X3
+        year:
+          type: number
+          example: 2011
+        oilChange:
+          type: boolean
+          example: true
+        filterChange:
+          type: boolean
+          example: true
+        tyreChange:
+          type: boolean
+          example: true
+        engineService:
+          type: boolean
+          example: true
+        state:
+          type: string
+          example: not_finished
+        description:
+          type: string
+          example: velmi pokazene
         number_plate:
           type: string
           example: TT816DX
@@ -526,7 +560,7 @@ components:
           example: TT321DX
     RepairedCars422:
       properties:
-        id:
+        message:
          type: string
          example: Zadane parametre boli nespravne.  
     Cars201:
@@ -575,7 +609,7 @@ components:
           example: TT800DX
     Cars422:
       properties:
-        id:
+        message:
          type: string
          example: Zadane parametre boli nespravne.
     Customers201:
@@ -614,27 +648,35 @@ components:
           example: hesielko
     CustomersID404:
       properties:
-        id:
+        message:
          type: string
          example: Zakaznik neexistuje.
     CarsID404:
       properties:
-        id:
+        message:
          type: string
          example: Vozidlo neexistuje.
     Technicians404:
       properties:
-        id:
+        message:
          type: string
          example: Technik neexistuje.
     CarsDELETE200:
       properties:
-        id:
+        message:
          type: string
          example: Vozidlo bolo vymazane z databazy.
+    CustomersLogin:
+      properties:
+        name:
+         type: string
+         example: Ferko
+        password:
+         type: string
+         example: hesielko1122.
     BadDetails:
       properties:
-        id:
+        message:
          type: string
          example: Zlé prihlasovacie údaje.
 servers:
