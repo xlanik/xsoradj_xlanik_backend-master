@@ -4,6 +4,35 @@ info:
   description: API dokumentácia k projektu. API dokumentacia vychádza zo šturktúry https://swagger.io/docs/specification/basic-structure/
   version: 1.0.0
 paths:
+  /api/v1/login:
+    post:
+      description: Volanie login je volané vždy pri prihlasovaní používateľa do aplikácie. Prehľadáva sa aj databáza s používateľmi a taktiež s technikmi
+      tags:
+        - Prihlásenie používateľa
+      summary: Skontroluje zadané používateľské údaje
+      responses:
+        '202':
+          description: Detail prihláseného používateľa
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Customers'
+        '403':
+          description: Zlé prihlasovacie údaje
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/BadDetails'
   /api/v1/customers:
     get:
       description: Bude volaný vtedy, keď budeme potrebovať získať zoznam používateľov kvôli prihláseniu.
@@ -603,6 +632,11 @@ components:
         id:
          type: string
          example: Vozidlo bolo vymazane z databazy.
+    BadDetails:
+      properties:
+        id:
+         type: string
+         example: Zlé prihlasovacie údaje.
 servers:
   - description: SwaggerHub API Auto Mocking
     url: >-
