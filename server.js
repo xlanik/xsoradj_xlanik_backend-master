@@ -30,9 +30,9 @@ app.route('/Technicians')
   .get(async (req, res) => {
     try {
       const technicians = await Technician.find()
-      res.json(technicians)
+      res.status(200).json(technicians)
     } catch (err) {
-      res.status(500).json({ message: err.message })
+      res.status(400).json({ message: err.message })
     }
   })
   .post(async (req, res) => {
@@ -50,7 +50,7 @@ app.route('/Technicians')
   
   app.route('/Technicians/:id')
   .get(getOneTechnician, async (req, res) => {
-    res.json(res.technician)
+    res.status(200).json(res.technician)
   })
 
 app.route('/login')
@@ -59,7 +59,7 @@ app.route('/login')
       const loginCustomer = await Customer.findOne({ name: req.body.name })
       if(loginCustomer){
         if(loginCustomer.password == req.body.password){
-          res.status(400).json({ loginCustomer })
+          res.status(200).json({ loginCustomer })
         }
         else{
           res.status(400).json({ message: "Zle prihlasovacie udaje" })
@@ -69,7 +69,7 @@ app.route('/login')
         const loginTechnician = await Technician.findOne({ name: req.body.name })
         if(loginTechnician){
           if(loginTechnician.password == req.body.password){
-            res.status(400).json({loginTechnician })
+            res.status(200).json({loginTechnician })
           }
         else{
           res.status(400).json({ message: "Zle prihlasovacie udaje" })
@@ -121,18 +121,18 @@ app.route('/Customers')
 
 app.route('/Customers/:id')
   .get(getOneCustomer, async (req, res) => {
-    res.json(res.customer)
+    res.status(200).json(res.customer)
   })
   .delete(getOneCustomer, async (req, res) => {
     try {
       await res.customer.remove()
       res.json({ message: 'Customer was deleted from DB...' })
     } catch (err) {
-      res.status(500).json({ message: err.message })
+      res.status(400).json({ message: err.message })
     }
   })
 
-
+//funkcia pouzita z https://stackoverflow.com/questions/48762165/converting-image-file-into-base64-in-express-nodejs
 function base64_encode(file) {
   var bitmap = fs.readFileSync(file);
   return new Buffer(bitmap).toString('base64');
@@ -143,9 +143,9 @@ app.route('/Cars')
   .get(async (req, res) => {
     try {
       const cars = await Car.find()
-      res.json(cars)
+      res.status(200).json(cars)
     } catch (err) {
-      res.status(500).json({ message: err.message })
+      res.status(400).json({ message: err.message })
     }
   })
   .post(upload.single('image_url'), async (req, res) => {
@@ -179,14 +179,14 @@ app.route('/Cars')
 
 app.route('/Cars/:id')
   .get(getOneCar, async (req, res) => {
-    res.json(res.car)
+    res.status(200).json(res.car)
   })
   .delete(getOneCar, async (req, res) => {
     try {
       await res.car.remove()
       res.status(200).json({ message: 'Car was deleted from DB...' })
     } catch (err) {
-      res.status(500).json({ message: err.message })
+      res.status(404).json({ message: err.message })
     }
   })
   .patch(getOneCar, async (req, res) => {
@@ -203,22 +203,30 @@ app.route('/Cars/:id')
 
     try {
       const updatedCar = await res.car.save()
-      res.json(updatedCar)
+      res.status(200).json(updatedCar)
     } catch (err) {
-      res.status(400).json({ message: err.message })
+      res.status(404).json({ message: err.message })
     }
   })
 
+  app.route('/TechnicianCars/:id')    //na ziskanie aut technikpov
+  .get(getTechniciansCars, async (req, res) => {
+    res.status(200).json(res.technicianCars)
+  })
 
+  app.route('/CustomerCar/:id')    //na ziskanie auta zakaznika
+  .get(getCustomersCar, async (req, res) => {
+    res.status(200).json(res.customerCar)
+  })
 
 //API volania pre auta, ktore su opravene
 app.route('/RepairedCars')
   .get(async (req, res) => {
     try {
       const repairedCars = await RepairedCar.find()
-      res.json(repairedCars)
+      res.status(200).json(repairedCars)
     } catch (err) {
-      res.status(500).json({ message: err.message })
+      res.status(400).json({ message: err.message })
     }
   })
   .post(async (req, res) => {
@@ -257,7 +265,8 @@ app.listen(port, function() {
   console.log(`App listening on port ${port}!`)
 });
 
-
+//middleware funkcia pouzita z linku. Ziskame si vzdy konkretny objekt alebo objekty
+//https://github.com/WebDevSimplified/Your-First-Node-REST-API/blob/master/routes/subscribers.js
 async function getOneCustomer(req, res, next) {
   let customer
   try {
@@ -266,7 +275,7 @@ async function getOneCustomer(req, res, next) {
       return res.status(404).json({ message: 'Customer is not in the DB' })
     }
   } catch (err) {
-    return res.status(500).json({ message: err.message })
+    return res.status(404).json({ message: err.message })
   }
 
   res.customer = customer
@@ -281,7 +290,7 @@ async function getOneTechnician(req, res, next) {
       return res.status(404).json({ message: 'Technician is not in the DB' })
     }
   } catch (err) {
-    return res.status(500).json({ message: err.message })
+    return res.status(404).json({ message: err.message })
   }
 
   res.technician = technician
@@ -296,9 +305,39 @@ async function getOneCar(req, res, next) {
       return res.status(404).json({ message: 'Car is not in the DB' })
     }
   } catch (err) {
-    return res.status(500).json({ message: err.message })
+    return res.status(404).json({ message: err.message })
   }
 
   res.car = car
+  next()
+}
+
+async function getTechniciansCars(req, res, next) {
+  let technicianCars
+  try {
+    technicianCars = await Car.find( { technician_id: req.params.id} )
+    if (technicianCars.length == 0) {
+      return res.status(404).json({ message: 'Technician has no assigned cars...' })
+    }
+  } catch (err) {
+    return res.status(404).json({ message: err.message })
+  }
+
+  res.technicianCars = technicianCars
+  next()
+}
+
+async function getCustomersCar(req, res, next) {
+  let customerCar
+  try {
+    customerCar = await Car.find( { customer_id: req.params.id} )
+    if (customerCar.length == 0) {
+      return res.status(404).json({ message: 'Customer has no car in database...' })
+    }
+  } catch (err) {
+    return res.status(404).json({ message: err.message })
+  }
+
+  res.customerCar = customerCar
   next()
 }
