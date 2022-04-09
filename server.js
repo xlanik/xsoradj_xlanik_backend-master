@@ -7,12 +7,13 @@ const mongoose = require('mongoose');
 const multer  = require('multer')
 const upload = multer({ dest: 'uploads/' })
 const fs = require('fs');
+const cors = require('cors')
 
 const databaseUri = process.env.DATABASE_URI
 
 //app.use(express.json()) //https://stackoverflow.com/questions/18542329/typeerror-cannot-read-property-id-of-undefined
 app.use(express.json({limit: '50mb'}));
-
+app.use(cors())
 //v envcku v tom database uri si treb premenit nazov databazy z MyfirstDatabase na Autoservis
 
 const Technician = require('./databaseModels/Technicians')
@@ -76,6 +77,7 @@ app.route('/login')
         }
         }
       }
+      res.status(400).json({ message: "Zle prihlasovacie udaje" })
     }
     catch(err){
       res.status(400).json({ message: err.message })
