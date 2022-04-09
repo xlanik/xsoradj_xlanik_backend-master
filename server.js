@@ -61,9 +61,11 @@ app.route('/login')
       if(loginCustomer){
         if(loginCustomer.password == req.body.password){
           res.status(200).json({ loginCustomer })
+          return
         }
         else{
           res.status(400).json({ message: "Zle prihlasovacie udaje" })
+          return
         }
       }
       else{
@@ -71,16 +73,20 @@ app.route('/login')
         if(loginTechnician){
           if(loginTechnician.password == req.body.password){
             res.status(200).json({loginTechnician })
+            return
           }
         else{
           res.status(400).json({ message: "Zle prihlasovacie udaje" })
+          return
         }
         }
       }
       res.status(400).json({ message: "Zle prihlasovacie udaje" })
+      return
     }
     catch(err){
       res.status(400).json({ message: err.message })
+      return
     }
   })
 
