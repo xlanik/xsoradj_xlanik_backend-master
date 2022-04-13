@@ -81,7 +81,7 @@ app.route('/login')
         }
         }
       }
-      res.status(400).json({ message: "Zle prihlasovacie udajee" })
+      res.status(400).json({ message: "Zle prihlasovacie udaje" })
       return
     }
     catch(err){
