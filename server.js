@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 const MongoClient = require('mongodb').MongoClient
 require('dotenv').config()
 const mongoose = require('mongoose');
@@ -9,7 +9,7 @@ const upload = multer({ dest: 'uploads/' })
 const fs = require('fs');
 const cors = require('cors')
 
-const databaseUri = process.env.DATABASE_URI
+const databaseUri = process.env.MONGODB_URI
 
 //app.use(express.json()) //https://stackoverflow.com/questions/18542329/typeerror-cannot-read-property-id-of-undefined
 app.use(express.json({limit: '50mb'}));
@@ -230,12 +230,10 @@ app.route('/Cars/:id')
     res.car.filterChange = false
     res.car.tireChange = false
     res.car.engineService = false
-    res.car.state = "repaired"
+    res.car.state = req.body.state  //opravene
     res.car.last_service = new Date()
-
-    if (req.body.description != null) {
-      res.car.description = req.body.description
-    }
+    res.car.description = req.body.description    //z requeste poznamky technika. Potom sa to obvai v jednom poli v historii
+    
 
     try {
       const updatedCar = await res.car.save()
@@ -297,7 +295,7 @@ app.get('/', function(req, res) {
 });
 
 
-app.listen(port, function() {
+app.listen(process.env.PORT || port, function() {
   console.log(`App listening on port ${port}!`)
 });
 
