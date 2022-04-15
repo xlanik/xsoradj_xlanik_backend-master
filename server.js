@@ -202,12 +202,12 @@ app.route('/Cars/:id')
     res.car.filterChange = false
     res.car.tireChange = false
     res.car.engineService = false
-    res.car.state = "repaired"
+    res.car.state = req.body.state  //opravene
     res.car.last_service = new Date()
 
-    if (req.body.description != null) {
+    /*if (req.body.description != null) {
       res.car.description = req.body.description
-    }
+    }*/
 
     try {
       const updatedCar = await res.car.save()
