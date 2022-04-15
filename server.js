@@ -9,7 +9,7 @@ const upload = multer({ dest: 'uploads/' })
 const fs = require('fs');
 const cors = require('cors')
 
-const databaseUri = process.env.DATABASE_URI
+const databaseUri = process.env.MONGODB_URI
 
 //app.use(express.json()) //https://stackoverflow.com/questions/18542329/typeerror-cannot-read-property-id-of-undefined
 app.use(express.json({limit: '50mb'}));
