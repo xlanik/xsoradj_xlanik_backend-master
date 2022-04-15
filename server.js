@@ -155,7 +155,7 @@ app.route('/Cars')
     } catch (err) {
       res.status(400).json({ message: err.message })
     }
-  })
+  })/*
   .post(upload.single('image_url'), async (req, res) => {
     
     const parsedData = JSON.parse(req.body.data)
@@ -184,6 +184,34 @@ app.route('/Cars')
       res.status(400).json({ message: err.message })
     }
   })
+*/
+  .post(async (req, res) => {
+      
+    const parsedData = JSON.parse(req.body.data)
+
+    const car = new Car({
+      customer_id: parsedData.customer_id,
+      technician_id: parsedData.technician_id,
+      brand: parsedData.brand,
+      model: parsedData.model,
+      year: parsedData.year,
+      oilChange: parsedData.oilChange,
+      filterChange: parsedData.filterChange,
+      tireChange: parsedData.tireChange,
+      engineService: parsedData.engineService,
+      state: parsedData.state,
+      description: parsedData.description,
+      image_url: parsedData.image_url,
+      number_plate: parsedData.number_plate
+    })
+    try {
+      const newCar = await car.save()
+      res.status(201).json(newCar)
+    } catch (err) {
+      res.status(400).json({ message: err.message })
+    }
+  })
+
 
 app.route('/Cars/:id')
   .get(getOneCar, async (req, res) => {
