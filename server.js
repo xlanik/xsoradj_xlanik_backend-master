@@ -187,7 +187,7 @@ app.route('/Cars')
 */
   .post(async (req, res) => {
       
-    const parsedData = JSON.parse(req.body.data)
+    const parsedData = req.body;
 
     const car = new Car({
       customer_id: parsedData.customer_id,
