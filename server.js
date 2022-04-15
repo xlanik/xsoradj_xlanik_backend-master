@@ -204,10 +204,8 @@ app.route('/Cars/:id')
     res.car.engineService = false
     res.car.state = req.body.state  //opravene
     res.car.last_service = new Date()
-
-    /*if (req.body.description != null) {
-      res.car.description = req.body.description
-    }*/
+    res.car.description = req.body.description    //z requeste poznamky technika. Potom sa to obvai v jednom poli v historii
+    
 
     try {
       const updatedCar = await res.car.save()
