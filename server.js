@@ -291,7 +291,7 @@ app.route('/RepairedCars')
 
 
 app.get('/', function(req, res) {
-  res.send('Hello jakubko!')
+  res.send('LanSor Autoservis!')
 });
 
 
